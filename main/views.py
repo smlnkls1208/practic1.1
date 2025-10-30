@@ -6,9 +6,6 @@ from .forms import RegisterForm
 def index(request):
     return render(request, 'index.html')
 
-def login_stub(request):
-    return HttpResponse("<h2>Заглушка: Вход</h2><p><a href='{% url \"index\" %}'>На главную</a></p>")
-
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -23,4 +20,4 @@ def register(request):
             return redirect('login')
     else:
         form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form})

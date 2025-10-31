@@ -1,3 +1,9 @@
+html {
+    background:url("parallax-bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .sidebar-nav {
     margin-top: 20px;
     padding: 0;
@@ -9,10 +15,11 @@
 }
 
 * {
-background: beige;
+background: lightblue;
 }
 
 button {
+    font-weight: bold;
 background-color: gray;
 border: solid 3px black;
 padding: 10px;

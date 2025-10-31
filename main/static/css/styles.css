@@ -24,11 +24,3 @@ a {
 margin-top:20px;
 }
 
-input:user-invalid {
-  border: 2px solid red;
-}
-
-input:user-invalid + span::before {
-  content: "✖";
-  color: red;
-}

@@ -15,6 +15,7 @@
             {% block sidebar %}
             {% if user.is_authenticated %}
             <li>Вы вошли как {{ user.username }}</li>
+            <li><a href="{% url 'my_requests' %}">Мои заявки</a></li>
             <li><a href="{% url 'logout' %}">Выход</a></li>
             {% else %}
             <li><a href="{% url 'login' %}">Войти</a></li>

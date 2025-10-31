@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import re
+from .models import DesignRequest, Category
 
 class RegisterForm(forms.Form):
     full_name = forms.CharField(
@@ -42,3 +43,25 @@ class RegisterForm(forms.Form):
         if password and password_confirm and password != password_confirm:
             raise ValidationError("Пароли не совпадают.")
         return password_confirm
+
+
+class DesignRequestForm(forms.ModelForm):
+    class Meta:
+        model = DesignRequest
+        fields = ['title', 'description', 'category', 'photo']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].queryset = Category.objects.all()
+
+    def clean_photo(self):
+        photo = self.cleaned_data.get('photo')
+        if photo:
+            if photo.size > 2 * 1024 * 1024:
+                raise forms.ValidationError("Файл слишком большой. Максимум — 2 МБ.")
+            if not photo.name.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp')):
+                raise forms.ValidationError("Недопустимый формат файла. Разрешены: jpg, jpeg, png, bmp.")
+        return photo

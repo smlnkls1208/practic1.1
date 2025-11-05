@@ -13,14 +13,17 @@
     <div class="row">
         <div class="col-sm-2">
             {% block sidebar %}
-            {% if user.is_authenticated %}
-            <li>Вы вошли как {{ user.username }}</li>
-            <li><a href="{% url 'my_requests' %}">Мои заявки</a></li>
-            <li><a href="{% url 'logout' %}">Выход</a></li>
-            {% else %}
-            <li><a href="{% url 'login' %}">Войти</a></li>
-            <li><a href="{% url 'register' %}">Регистрация</a></li>
-            {% endif %}
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'index' %}">Главная страница</a></li>
+                {% if user.is_authenticated %}
+                    <li>Вы вошли как {{ user.username }}</li>
+                    <li><a href="{% url 'my_requests' %}">Мои заявки</a></li>
+                    <li><a href="{% url 'logout' %}">Выход</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Войти</a></li>
+                    <li><a href="{% url 'register' %}">Регистрация</a></li>
+                {% endif %}
+            </ul>
             {% endblock %}
         </div>
         <div class="col-sm-10">

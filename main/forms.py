@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 import re
 from .models import DesignRequest, Category
 
+
 class RegisterForm(forms.Form):
     full_name = forms.CharField(
         max_length=255,
@@ -65,3 +66,30 @@ class DesignRequestForm(forms.ModelForm):
             if not photo.name.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp')):
                 raise forms.ValidationError("Недопустимый формат файла. Разрешены: jpg, jpeg, png, bmp.")
         return photo
+
+
+class ChangeStatusForm(forms.ModelForm):
+    class Meta:
+        model = DesignRequest
+        fields = ['status', 'comment', 'design_image']
+        widgets = {
+            'comment': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Комментарий для статуса «Принято в работу»'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.status != 'new':
+            for field in self.fields.values():
+                field.disabled = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+        status = cleaned_data.get('status')
+        comment = cleaned_data.get('comment')
+        design_image = cleaned_data.get('design_image')
+
+        if status == 'in_progress' and not comment:
+            raise forms.ValidationError("Для статуса «Принято в работу» обязателен комментарий.")
+        if status == 'completed' and not design_image:
+            raise forms.ValidationError("Для статуса «Выполнено» обязательно прикрепить изображение дизайна.")
+        return cleaned_data

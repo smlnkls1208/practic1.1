@@ -1,6 +1,35 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1>Добро пожаловать в Design.pro</h1>
+<h1>Design.pro — Дизайн интерьеров</h1>
 <p>Создаём интерьеры, которые вдохновляют.</p>
-{% endblock %}}
+
+<h2>Заявок в работе: {{ in_progress_count }}</h2>
+
+<h2>Последние выполненные работы:</h2>
+{% if completed_requests %}
+    <div>
+    {% for req in completed_requests %}
+        <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #eee; border-radius: 6px;">
+            <h3>{{ req.title }}</h3>
+            <p><strong>Категория:</strong> {{ req.category.name }}</p>
+            <p><small>{{ req.created_at|date:"d.m.Y H:i" }}</small></p>
+            {% if req.photo %}
+                <img src="{{ req.photo.url }}"
+                     alt="Фото помещения"
+                     style="max-width: 300px; height: auto; margin-top: 10px; border-radius: 4px;">
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <p>Нет выполненных заявок.</p>
+{% endif %}
+
+{% if not user.is_authenticated %}
+    <p>
+        <a href="{% url 'login' %}">Войдите</a> или
+        <a href="{% url 'register' %}">зарегистрируйтесь</a>,
+        чтобы создать заявку на дизайн.
+    </p>
+{% endif %}
+{% endblock %}

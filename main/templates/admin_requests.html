@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Все заявки</h2>
+
+<form method="get">
+    <label for="status">Фильтр по статусу:</label>
+    <select name="status" id="status" onchange="this.form.submit()">
+        <option value="">Все</option>
+        <option value="new" {% if status_filter == 'new' %}selected{% endif %}>Новая</option>
+        <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>Принято в работу</option>
+        <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Выполнено</option>
+    </select>
+</form>
+
+{% if requests %}
+    <ul>
+    {% for req in requests %}
+        <li>
+            <strong>{{ req.title }}</strong> ({{ req.get_status_display }})
+            <br><small>{{ req.created_at|date:"d.m.Y H:i" }}</small>
+            <br><strong>Пользователь:</strong> {{ req.user.username }}
+            <br>Категория: {{ req.category.name }}
+            <br>Описание: {{ req.description|truncatewords:20 }}
+
+            {% if req.photo %}
+                <br>
+                <img src="{{ req.photo.url }}" alt="Фото помещения" style="max-width: 200px; height: auto; margin-top: 8px;">
+            {% endif %}
+
+            {% if req.status == 'completed' and req.design_image %}
+                <br>
+                <strong>Готовый дизайн:</strong>
+                <br>
+                <img src="{{ req.design_image.url }}" alt="Готовый дизайн" style="max-width: 200px; height: auto; margin-top: 8px;">
+            {% endif %}
+
+            {% if req.status == 'new' %}
+                <br>
+                <a href="{% url 'change_status' req.id %}" class="btn btn-warning">Изменить статус</a>
+            {% endif %}
+        </li>
+        <hr>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Заявок пока нет.</p>
+{% endif %}
+
+<a href="{% url 'index' %}">На главную</a>
+{% endblock %}

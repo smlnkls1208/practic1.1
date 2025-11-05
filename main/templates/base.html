@@ -16,12 +16,12 @@
             <ul class="sidebar-nav">
                 <li><a href="{% url 'index' %}">Главная страница</a></li>
                 {% if user.is_authenticated %}
-                <li>Вы вошли как {{ user.username }}</li>
+                <li>Приветствуем вас, {{ user.username }}!</li>
                 <li><a href="{% url 'my_requests' %}">Мои заявки</a></li>
                 <li><a href="{% url 'logout' %}">Выход</a></li>
                     {% if user.is_staff %}
                         <hr><hr>
-                        <li>Интерфейс администратора</li>
+                <li><strong>Интерфейс администратора</strong></li>
                         <li><a href="{% url 'admin_requests' %}">Все заявки</a></li>
                     {% endif %}
                 {% else %}

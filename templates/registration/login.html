@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if form.errors %}
+  <p>Неверный логин или пароль. Попробуйте снова.</p>
+{% endif %}
+
+{% if next %}
+  {% if user.is_authenticated %}
+    <p>Ваша учётная запись не имеет доступа к этой странице. Пожалуйста, войдите под учётной записью с необходимыми правами.</p>
+  {% else %}
+    <p>Пожалуйста, войдите, чтобы увидеть эту страницу.</p>
+  {% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+  <table>
+    <tr>
+      <td>{{ form.username.label_tag }}</td>
+      <td>{{ form.username }}</td>
+    </tr>
+    <tr>
+      <td>{{ form.password.label_tag }}</td>
+      <td>{{ form.password }}</td>
+    </tr>
+  </table>
+  <input type="submit" value="Войти" />
+  <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+<p><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>
+<hr>
+  <p><a href="{% url 'register' %}">Регистрация</a></p>
+{% endblock %}
